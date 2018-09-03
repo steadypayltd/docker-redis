@@ -21,12 +21,14 @@ RUN chmod +x /usr/local/bin/kubectl
 RUN apk add --no-cache bash sed curl redis=4.0.11-r0 ca-certificates
 RUN rm -rf /var/cache/apk/*
 
-COPY redis-master.conf /etc/redis/master.conf
-COPY redis-slave.conf /etc/redis/slave.conf
-COPY redis-sentinel.conf /etc/redis/sentinel.conf
-COPY label-updater.sh /usr/local/bin/label-updater.sh
-COPY redis-launcher.sh /usr/local/bin/redis-launcher.sh
-COPY promote.sh /usr/local/bin/promote.sh
+WORKDIR alpine
+
+COPY alpine/redis-master.conf /etc/redis/master.conf
+COPY alpine/redis-slave.conf /etc/redis/slave.conf
+COPY alpine/redis-sentinel.conf /etc/redis/sentinel.conf
+COPY alpine/label-updater.sh /usr/local/bin/label-updater.sh
+COPY alpine/redis-launcher.sh /usr/local/bin/redis-launcher.sh
+COPY alpine/promote.sh /usr/local/bin/promote.sh
 
 CMD [ "touch /var/log/redis/runner.txt; chmod +w /var/log/redis/runner.txt; chmod +x /usr/local/bin/redis-launcher.sh" ]
 CMD [ "/usr/local/bin/redis-launcher.sh | tee /var/log/redis/runner.txt" ]
